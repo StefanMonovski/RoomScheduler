@@ -1,5 +1,3 @@
-using System;
-
 namespace RoomScheduler.Web.Models
 {
     public class ErrorViewModel
