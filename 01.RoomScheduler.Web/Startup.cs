@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RoomScheduler.Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace RoomScheduler.Web
 {
@@ -40,6 +41,8 @@ namespace RoomScheduler.Web
             {
                 configure.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline and apply migrations.
