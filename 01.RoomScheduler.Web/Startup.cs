@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using RoomScheduler.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using RoomScheduler.Services.Interfaces;
+using RoomScheduler.Services.Services;
 
 namespace RoomScheduler.Web
 {
@@ -43,6 +45,10 @@ namespace RoomScheduler.Web
             });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddTransient<IApplicationUserService, ApplicationUserService>();
+            services.AddTransient<IRoomService, RoomService>();
+            services.AddTransient<ITimeSlotService, TimeSlotService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline and apply migrations.

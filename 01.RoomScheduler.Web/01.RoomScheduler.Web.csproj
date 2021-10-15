@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\02.RoomScheduler.Data\02.RoomScheduler.Data.csproj" />
+    <ProjectReference Include="..\03.RoomScheduler.Services\03.RoomScheduler.Services.csproj" />
   </ItemGroup>
 
 </Project>
