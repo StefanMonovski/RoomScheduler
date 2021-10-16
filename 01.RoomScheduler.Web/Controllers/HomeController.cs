@@ -1,11 +1,8 @@
 ﻿using RoomScheduler.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RoomScheduler.Web.Controllers
 {
@@ -18,8 +15,14 @@ namespace RoomScheduler.Web.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("All", "Room");
+            }
+
             return View();
         }
 
