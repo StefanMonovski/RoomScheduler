@@ -22,7 +22,7 @@ namespace RoomScheduler.Services.Services
             this.mapper = mapper;
         }
 
-        public async Task<string> AddRoomAsync(string name, int capacity, DateTime availableFrom, DateTime availableTo, string userId)
+        public async Task<string> AddRoomAsync(string name, int capacity, TimeSpan availableFrom, TimeSpan availableTo, string userId)
         {
             Room room = new()
             {
@@ -74,7 +74,7 @@ namespace RoomScheduler.Services.Services
             return room.Guid;
         }
 
-        public async Task<string> UpdateRoomAvailableFromAsync(int roomId, DateTime availableFrom)
+        public async Task<string> UpdateRoomAvailableFromAsync(int roomId, TimeSpan availableFrom)
         {
             Room room = context.Rooms
                 .Where(x => x.Id == roomId)
@@ -86,7 +86,7 @@ namespace RoomScheduler.Services.Services
             return room.Guid;
         }
 
-        public async Task<string> UpdateRoomAvailableToAsync(int roomId, DateTime availableTo)
+        public async Task<string> UpdateRoomAvailableToAsync(int roomId, TimeSpan availableTo)
         {
             Room room = context.Rooms
                 .Where(x => x.Id == roomId)

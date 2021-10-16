@@ -7,7 +7,7 @@ namespace RoomScheduler.Services.Interfaces
 {
     public interface IRoomService
     {
-        Task<string> AddRoomAsync(string name, int capacity, DateTime availableFrom, DateTime availableTo, string userId);
+        Task<string> AddRoomAsync(string name, int capacity, TimeSpan availableFrom, TimeSpan availableTo, string userId);
 
         Task<string> DeleteRoomAsync(int roomId);
 
@@ -15,9 +15,9 @@ namespace RoomScheduler.Services.Interfaces
 
         Task<string> UpdateRoomCapacityAsync(int roomId, int capacity);
 
-        Task<string> UpdateRoomAvailableFromAsync(int roomId, DateTime availableFrom);
+        Task<string> UpdateRoomAvailableFromAsync(int roomId, TimeSpan availableFrom);
 
-        Task<string> UpdateRoomAvailableToAsync(int roomId, DateTime availableTo);
+        Task<string> UpdateRoomAvailableToAsync(int roomId, TimeSpan availableTo);
 
         List<RoomDto> GetAllRooms();
 

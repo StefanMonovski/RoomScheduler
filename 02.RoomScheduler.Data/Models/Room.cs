@@ -21,9 +21,9 @@ namespace RoomScheduler.Data.Models
 
         public int Capacity { get; set; }
 
-        public DateTime AvailableFrom { get; set; }
+        public TimeSpan AvailableFrom { get; set; }
 
-        public DateTime AvailableTo { get; set; }
+        public TimeSpan AvailableTo { get; set; }
 
         public ICollection<TimeSlot> Schedule { get; set; }
 

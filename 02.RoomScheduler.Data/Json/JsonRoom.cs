@@ -9,9 +9,9 @@ namespace RoomScheduler.Data.Json
 
         public int Capacity { get; set; }
 
-        public DateTime AvailableFrom { get; set; }
+        public TimeSpan AvailableFrom { get; set; }
 
-        public DateTime AvailableTo { get; set; }
+        public TimeSpan AvailableTo { get; set; }
 
         public List<JsonTimeSlot> Schedule { get; set; }
     }

@@ -13,9 +13,9 @@ namespace RoomScheduler.Services.DataTransferObjects
 
         public int Capacity { get; set; }
 
-        public DateTime AvailableFrom { get; set; }
+        public TimeSpan AvailableFrom { get; set; }
 
-        public DateTime AvailableTo { get; set; }
+        public TimeSpan AvailableTo { get; set; }
 
         public string CreatorId { get; set; }
 
