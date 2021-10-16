@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using RoomScheduler.Services.Interfaces;
 using RoomScheduler.Services.Services;
+using System.IO;
+using System.Linq;
 
 namespace RoomScheduler.Web
 {
@@ -49,6 +51,7 @@ namespace RoomScheduler.Web
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
             services.AddTransient<IRoomService, RoomService>();
             services.AddTransient<ITimeSlotService, TimeSlotService>();
+            services.AddTransient<IJsonImportService, JsonImportService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline and apply migrations.
@@ -82,6 +85,12 @@ namespace RoomScheduler.Web
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            if (!context.Rooms.IgnoreQueryFilters().Any())
+            {
+                IJsonImportService importService = app.ApplicationServices.GetRequiredService<IJsonImportService>();
+                importService.Import(Path.Combine(env.WebRootPath, "json/") + "rooms.json", app.ApplicationServices);
+            }
         }
     }
 }

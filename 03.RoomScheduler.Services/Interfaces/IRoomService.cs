@@ -23,6 +23,10 @@ namespace RoomScheduler.Services.Interfaces
 
         RoomDto GetRoomById(int roomId);
 
+        string GetRoomGuidById(int roomId);
+
         RoomDto GetRoomByGuid(string roomGuid);
+
+        int GetRoomIdByGuid(string roomGuid);
     }
 }

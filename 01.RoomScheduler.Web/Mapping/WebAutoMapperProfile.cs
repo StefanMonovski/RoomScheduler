@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using RoomScheduler.Services.DataTransferObjects;
+using RoomScheduler.Web.ViewModels;
 
 namespace RoomScheduler.Web.Mapping
 {
@@ -6,6 +8,7 @@ namespace RoomScheduler.Web.Mapping
     {
         public WebAutoMapperProfile()
         {
+            CreateMap<RoomDto, RoomAllViewModel>();
         }
     }
 }

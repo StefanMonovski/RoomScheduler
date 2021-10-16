@@ -117,6 +117,15 @@ namespace RoomScheduler.Services.Services
             return roomDto;
         }
 
+        public string GetRoomGuidById(int roomId)
+        {
+            Room room = context.Rooms
+                .Where(x => x.Id == roomId)
+                .FirstOrDefault();
+
+            return room.Guid;
+        }
+
         public RoomDto GetRoomByGuid(string roomGuid)
         {
             RoomDto roomDto = context.Rooms
@@ -125,6 +134,15 @@ namespace RoomScheduler.Services.Services
                 .FirstOrDefault();
 
             return roomDto;
+        }
+
+        public int GetRoomIdByGuid(string roomGuid)
+        {
+            Room room = context.Rooms
+                .Where(x => x.Guid == roomGuid)
+                .FirstOrDefault();
+
+            return room.Id;
         }
     }
 }
