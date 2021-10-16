@@ -11,28 +11,45 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
         }
+
+        [name="container"] {
+            border: 2px solid;
+            border-color: grey;
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body>
 
     @if (Model.Count == 0)
     {
-        <div class="text-center">
-            <h1 class="display-4">No available rooms!</h1>
+        <div name="container" class="list-group-item" style="margin-bottom: 10px;">
+            <div style="padding: 10px;">
+                <h5>No available rooms!</h5>
+            </div>
         </div>
     }
-
-    <div class="wrapper">
-        @foreach (var room in Model)
-        {
-            <div class="list-group-item-action" style="border: 2px solid; border-color: grey; border-radius: 20px;">
-                <div style="padding: 10px;">
-                    @room.Name
-                    @room.Capacity
-                </div>
+    else
+    {
+        <div name="container" class="list-group-item" style="margin-bottom: 10px;">
+            <div style="padding: 10px;">
+                <h5>All available rooms:</h5>
             </div>
-        }
-    </div>
+        </div>
 
+        <div class="wrapper">
+            @foreach (var room in Model)
+            {
+                <a name="container" href="@Url.Action("Current", "Room", new { roomGuid = room.Guid} )" class="list-group-item-action">
+                    <div style="padding: 10px;">
+                        Name: @room.Name
+                        <br />
+                        Capacity: @room.Capacity
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    
 </body>
 </html>

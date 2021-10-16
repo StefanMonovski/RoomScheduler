@@ -1,0 +1,50 @@
+﻿@model RoomScheduler.Web.ViewModels.RoomCurrentViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        .wrapper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        [name="container"] {
+            border: 2px solid;
+            border-color: grey;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div name="container" class="list-group-item" style="margin-bottom: 50px;">
+        <div style="padding: 10px;">
+            <h3>@Model.Name</h3>
+        </div>
+    </div>
+
+    <div name="container" class="list-group-item" style="margin-bottom: 10px;">
+        <div style="padding: 10px;">
+            <h5>Reserved time slots:</h5>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        @foreach (var timeSlot in Model.Schedule)
+        {
+            <a name="container" href="" class="list-group-item-action">
+                <div style="padding: 10px;">
+                    From: @timeSlot.From
+                    <br />
+                    To: @timeSlot.To
+                </div>
+            </a>
+        }
+    </div>
+
+</body>
+</html>

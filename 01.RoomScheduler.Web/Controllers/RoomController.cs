@@ -27,5 +27,15 @@ namespace RoomScheduler.Web.Controllers
 
             return View(viewModel);
         }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Current(string roomGuid)
+        {
+            var room = roomService.GetRoomByGuid(roomGuid);
+            var viewModel = mapper.Map<RoomCurrentViewModel>(room);
+
+            return View(viewModel);
+        }
     }
 }

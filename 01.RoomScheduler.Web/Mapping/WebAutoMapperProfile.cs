@@ -9,6 +9,8 @@ namespace RoomScheduler.Web.Mapping
         public WebAutoMapperProfile()
         {
             CreateMap<RoomDto, RoomAllViewModel>();
+            CreateMap<RoomDto, RoomCurrentViewModel>();
+            CreateMap<TimeSlotDto, TimeSlotViewModel>();
         }
     }
 }
