@@ -1,0 +1,31 @@
+﻿@model RoomScheduler.Web.InputModels.FormFilterInputModel
+
+<form id="formFilterRooms" method="get" asp-controller="Room" asp-action="Filter" style="padding-left: 50px;" align="center">
+    <span class="form-group">
+        <input type="date" asp-for="Date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+    </span>
+    <span class="form-group">
+        <label asp-for="Participants"></label>
+        <input type="number" asp-for="Participants" value="2" />
+    </span>
+    <span class="form-group">
+        <select asp-for="Hours">
+            <option value="00">00</option>
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+        </select>
+        <select asp-for="Minutes">
+            <option value=":00">00</option>
+            <option value=":15">15</option>
+            <option value=":30">30</option>
+            <option value=":45">45</option>
+        </select>
+    </span>
+        
+    <button class="btn btn-primary" style="margin: 20px;">Search</button>
+    <div asp-validation-summary="All" class="text-danger"></div>
+</form>

@@ -28,5 +28,7 @@ namespace RoomScheduler.Services.Interfaces
         RoomDto GetRoomByGuid(string roomGuid);
 
         int GetRoomIdByGuid(string roomGuid);
+
+        List<RoomDto> GetFilteredRooms(DateTime date, int participants, TimeSpan duration);  
     }
 }

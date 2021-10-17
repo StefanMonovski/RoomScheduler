@@ -1,4 +1,4 @@
-﻿@model List<RoomScheduler.Web.ViewModels.RoomAllViewModel>
+﻿@model RoomScheduler.Web.ViewModels.FilterViewModel
 
 <!DOCTYPE html>
 <html>
@@ -21,13 +21,7 @@
 </head>
 <body>
 
-    <div name="container" style="padding-bottom: 75px; margin-bottom: 50px;">
-        <h3 style="vertical-align: top; padding: 20px; text-align: center;">Find the best room for your meeting!</h3>
-
-        <partial name="_FormFilterPartial.cshtml" model="new RoomScheduler.Web.InputModels.FormFilterInputModel()" />
-    </div>
-
-    @if (Model.Count == 0)
+    @if (Model.Rooms.Count == 0)
     {
         <div name="container" class="list-group-item" style="margin-bottom: 10px;">
             <div style="padding: 10px;">
@@ -39,12 +33,12 @@
     {
         <div name="container" class="list-group-item" style="margin-bottom: 10px;">
             <div style="padding: 10px;">
-                <h5>All available rooms:</h5>
+                <h5>All available rooms on @Model.Date.ToShortDateString() for @Model.Duration.Hours:@Model.Duration.Minutes hours and @Model.Participants people:</h5>
             </div>
         </div>
 
         <div class="wrapper">
-            @foreach (var room in Model)
+            @foreach (var room in Model.Rooms)
             {
                 <a name="container" href="@Url.Action("Current", "Room", new { roomGuid = room.Guid} )" class="list-group-item-action">
                     <div style="padding: 10px;">
@@ -55,10 +49,6 @@
                 </a>
             }
         </div>
-    }
-
-    @section Scripts{
-        <partial name="_ValidationScriptsPartial.cshtml" />
     }
 
 </body>

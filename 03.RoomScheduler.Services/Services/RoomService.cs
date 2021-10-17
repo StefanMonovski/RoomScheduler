@@ -15,7 +15,7 @@ namespace RoomScheduler.Services.Services
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
-        
+
         public RoomService(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
@@ -143,6 +143,58 @@ namespace RoomScheduler.Services.Services
                 .FirstOrDefault();
 
             return room.Id;
+        }
+
+        public List<RoomDto> GetFilteredRooms(DateTime date, int participants, TimeSpan duration)
+        {
+            List<RoomDto> rooms = context.Rooms
+                .ProjectTo<RoomDto>(mapper.ConfigurationProvider)
+                .ToList();
+
+            return rooms.Where(x => x.Capacity >= participants && DoesRoomHaveAvailableTimeSlotOnDate(date, duration, x.Id) == true).ToList();
+        }
+
+        private bool DoesRoomHaveAvailableTimeSlotOnDate(DateTime date, TimeSpan duration, int roomId)
+        {
+            List<TimeSlotDto> roomTimeSlotsOnDate = context.TimeSlots
+                .Where(x => x.RoomId == roomId && x.From.Date == date)
+                .ProjectTo<TimeSlotDto>(mapper.ConfigurationProvider)
+                .ToList();
+
+            if (roomTimeSlotsOnDate.Count == 0)
+            {
+                return true;
+            }
+
+            TimeSpan roomAvailableFrom = context.Rooms
+                .Where(x => x.Id == roomId)
+                .Select(x => x.AvailableFrom)
+                .FirstOrDefault();
+
+            TimeSpan roomAvailableTo = context.Rooms
+                .Where(x => x.Id == roomId)
+                .Select(x => x.AvailableTo)
+                .FirstOrDefault();
+
+            if (roomTimeSlotsOnDate[0].From.TimeOfDay - roomAvailableFrom >= duration)
+            {
+                return true;
+            }
+
+            for (int i = 0; i < roomTimeSlotsOnDate.Count - 2; i++)
+            {
+                if (roomTimeSlotsOnDate[i++].From - roomTimeSlotsOnDate[i].To >= duration)
+                {
+                    return true;
+                }
+            }
+
+            if (roomAvailableTo - roomTimeSlotsOnDate[roomTimeSlotsOnDate.Count - 1].To.TimeOfDay >= duration)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
