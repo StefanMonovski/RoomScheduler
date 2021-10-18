@@ -181,9 +181,10 @@ namespace RoomScheduler.Services.Services
                 return true;
             }
 
-            for (int i = 0; i < roomTimeSlotsOnDate.Count - 2; i++)
+            for (int i = 0; i < roomTimeSlotsOnDate.Count - 1; i++)
             {
-                if (roomTimeSlotsOnDate[i++].From - roomTimeSlotsOnDate[i].To >= duration)
+                int index = i;
+                if (roomTimeSlotsOnDate[index + 1].From.TimeOfDay - roomTimeSlotsOnDate[index].To.TimeOfDay >= duration)
                 {
                     return true;
                 }

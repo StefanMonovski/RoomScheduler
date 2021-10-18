@@ -1,4 +1,4 @@
-﻿@model RoomScheduler.Web.ViewModels.RoomCurrentViewModel
+﻿@model RoomScheduler.Web.ViewModels.AvailableRoomViewModel
 
 <!DOCTYPE html>
 <html>
@@ -29,19 +29,19 @@
 
     <div name="container" class="list-group-item" style="margin-bottom: 10px;">
         <div style="padding: 10px;">
-            <h5>Reserved time slots:</h5>
+            <h5>Available time slots:</h5>
         </div>
     </div>
 
     <div class="wrapper">
-        @foreach (var timeSlot in Model.Schedule)
+        @foreach (var time in Model.AvailableSchedule)
         {
             <a name="container" href="" class="list-group-item-action">
                 <div style="padding: 10px;">
-                    Date: @timeSlot.From.Date.ToShortDateString()
+                    From: @time.From.ToString(@"hh\:mm")
 
                     <br />
-                    From: @timeSlot.From.ToShortTimeString() To: @timeSlot.To.ToShortTimeString()
+                    To: @time.To.ToString(@"hh\:mm")
                 </div>
             </a>
         }

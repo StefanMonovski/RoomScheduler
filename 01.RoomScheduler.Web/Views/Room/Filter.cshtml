@@ -8,7 +8,7 @@
     <style>
         .wrapper {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(1, 1fr);
             gap: 10px;
         }
 
@@ -31,16 +31,16 @@
     }
     else
     {
-        <div name="container" class="list-group-item" style="margin-bottom: 10px;">
+        <div name="container" class="list-group-item" style="margin-bottom: 50px;">
             <div style="padding: 10px;">
-                <h5>All available rooms on @Model.Date.ToShortDateString() for @Model.Duration.Hours:@Model.Duration.Minutes hours and @Model.Participants people:</h5>
+                <h5>All available rooms on @Model.Date.ToShortDateString() for @Model.Duration.ToString(@"hh\:mm") hours and @Model.Participants people:</h5>
             </div>
         </div>
 
         <div class="wrapper">
             @foreach (var room in Model.Rooms)
             {
-                <a name="container" href="@Url.Action("Current", "Room", new { roomGuid = room.Guid} )" class="list-group-item-action">
+                <a name="container" href="@Url.Action("Available", "Room", new { roomGuid = room.Guid, duration = Model.Duration, date = Model.Date } )" class="list-group-item-action">
                     <div style="padding: 10px;">
                         Name: @room.Name
                         <br />

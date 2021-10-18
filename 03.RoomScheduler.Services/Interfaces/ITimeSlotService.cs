@@ -24,5 +24,7 @@ namespace RoomScheduler.Services.Interfaces
         TimeSlotDto GetTimeSlotById(int timeSlotId);
 
         TimeSlotDto GetTimeSlotByGuid(string timeSlotGuid);
+
+        List<AvailableTimesDto> GetAvailableTimeSlotsByRoom(DateTime date, TimeSpan duration, int roomId);
     }
 }

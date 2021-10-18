@@ -12,11 +12,13 @@ namespace RoomScheduler.Web.Controllers
     public class RoomController : Controller
     {
         private readonly IRoomService roomService;
+        private readonly ITimeSlotService timeSlotService;
         private readonly IMapper mapper;
 
-        public RoomController(IRoomService roomService, IMapper mapper)
+        public RoomController(IRoomService roomService, ITimeSlotService timeSlotService, IMapper mapper)
         {
             this.roomService = roomService;
+            this.timeSlotService = timeSlotService;
             this.mapper = mapper;
         }
 
@@ -61,6 +63,25 @@ namespace RoomScheduler.Web.Controllers
             };
 
              return View(viewModel);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Available(string roomGuid, TimeSpan duration, DateTime date)
+        {
+            var room = roomService.GetRoomByGuid(roomGuid);
+            var availableTimes = timeSlotService.GetAvailableTimeSlotsByRoom(date, duration, room.Id);
+
+            var viewModel = new AvailableRoomViewModel()
+            {
+                Id = room.Id,
+                Guid = room.Guid,
+                Name = room.Name,
+                Capacity = room.Capacity,
+                AvailableSchedule = mapper.Map<List<AvailableTimeViewModel>>(availableTimes)
+            };
+
+            return View(viewModel);
         }
     }
 }

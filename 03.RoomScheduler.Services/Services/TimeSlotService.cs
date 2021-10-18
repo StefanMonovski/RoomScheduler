@@ -120,5 +120,80 @@ namespace RoomScheduler.Services.Services
 
             return timeSlotDto;
         }
+
+        public List<AvailableTimesDto> GetAvailableTimeSlotsByRoom(DateTime date, TimeSpan duration, int roomId)
+        {
+            List<TimeSlotDto> reservedTimeSlots = context.TimeSlots
+                .Where(x => x.RoomId == roomId && x.From.Date == date)
+                .ProjectTo<TimeSlotDto>(mapper.ConfigurationProvider)
+                .ToList();
+
+            TimeSpan roomAvailableFrom = context.Rooms
+                .Where(x => x.Id == roomId)
+                .Select(x => x.AvailableFrom)
+                .FirstOrDefault();
+
+            TimeSpan roomAvailableTo = context.Rooms
+                .Where(x => x.Id == roomId)
+                .Select(x => x.AvailableTo)
+                .FirstOrDefault();
+
+            List<AvailableTimesDto> roomTimesAvailable = new();
+
+            if (reservedTimeSlots.Count == 0)
+            {
+                roomTimesAvailable.AddRange(GetAvailableTimeSlotsBetweenTimeSpans(roomAvailableFrom, roomAvailableTo, duration));
+                return roomTimesAvailable;
+            }
+
+            if (reservedTimeSlots[0].From.TimeOfDay - roomAvailableFrom >= duration)
+            {
+                roomTimesAvailable.AddRange(GetAvailableTimeSlotsBetweenTimeSpans(roomAvailableFrom, reservedTimeSlots[0].From.TimeOfDay, duration));
+            }
+
+            for (int i = 0; i < reservedTimeSlots.Count - 1; i++)
+            {
+                int index = i;
+                var to = reservedTimeSlots[index].To.TimeOfDay;
+                var from = reservedTimeSlots[index + 1].From.TimeOfDay;
+
+                if (reservedTimeSlots[index + 1].From.TimeOfDay - reservedTimeSlots[index].To.TimeOfDay >= duration)
+                {
+                    roomTimesAvailable.AddRange(GetAvailableTimeSlotsBetweenTimeSpans(reservedTimeSlots[index].To.TimeOfDay, reservedTimeSlots[index + 1].From.TimeOfDay, duration));
+                }
+            }
+
+            if (roomAvailableTo - reservedTimeSlots[reservedTimeSlots.Count - 1].To.TimeOfDay >= duration)
+            {
+                roomTimesAvailable.AddRange(GetAvailableTimeSlotsBetweenTimeSpans(reservedTimeSlots[reservedTimeSlots.Count - 1].To.TimeOfDay, roomAvailableTo, duration));
+            }
+
+            return roomTimesAvailable;
+        }
+
+        private static List<AvailableTimesDto> GetAvailableTimeSlotsBetweenTimeSpans(TimeSpan start, TimeSpan end, TimeSpan duration)
+        {
+            List<AvailableTimesDto> timeSlotsAvailable = new();
+
+            for (TimeSpan i = start; i < end; i += TimeSpan.FromMinutes(15))
+            {
+                var availableTime = new AvailableTimesDto()
+                {
+                    From = i,
+                    To = i + duration
+                };
+
+                if (availableTime.To <= end)
+                {
+                    timeSlotsAvailable.Add(availableTime);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return timeSlotsAvailable;
+        }
     }
 }
