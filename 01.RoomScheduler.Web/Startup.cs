@@ -52,6 +52,7 @@ namespace RoomScheduler.Web
             services.AddTransient<IRoomService, RoomService>();
             services.AddTransient<ITimeSlotService, TimeSlotService>();
             services.AddTransient<IJsonImportService, JsonImportService>();
+            services.AddTransient<IJsonExportService, JsonExportService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline and apply migrations.
@@ -89,7 +90,7 @@ namespace RoomScheduler.Web
             if (!context.Rooms.IgnoreQueryFilters().Any())
             {
                 IJsonImportService importService = app.ApplicationServices.GetRequiredService<IJsonImportService>();
-                importService.Import(Path.Combine(env.WebRootPath, "json/") + "rooms.json", app.ApplicationServices);
+                importService.Import(Path.Combine(env.WebRootPath, "json/") + "roomsInport.json", app.ApplicationServices);
             }
         }
     }

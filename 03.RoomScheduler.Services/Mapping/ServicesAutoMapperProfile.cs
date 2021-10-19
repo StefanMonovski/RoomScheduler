@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using RoomScheduler.Data.Json;
 using RoomScheduler.Data.Models;
 using RoomScheduler.Services.DataTransferObjects;
 
@@ -11,6 +12,9 @@ namespace RoomScheduler.Services.Mapping
             CreateMap<ApplicationUser, ApplicationUserDto>();
             CreateMap<Room, RoomDto>();
             CreateMap<TimeSlot, TimeSlotDto>();
+
+            CreateMap<RoomDto, JsonRoom>().ForMember(x => x.RoomName, x => x.MapFrom(x => x.Name));
+            CreateMap<TimeSlotDto, JsonTimeSlot>();
         }
     }
 }

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RoomScheduler.Services.Services;
 
 namespace RoomScheduler.Web
 {
@@ -15,6 +17,10 @@ namespace RoomScheduler.Web
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureServices(services =>
+                {
+                    services.AddHostedService<TimedHostedService>();
                 });
     }
 }
