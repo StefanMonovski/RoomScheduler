@@ -12,7 +12,7 @@ namespace RoomScheduler.Web.Mapping
             CreateMap<RoomDto, RoomCurrentViewModel>();
             CreateMap<RoomDto, RoomFilterViewModel>();
             CreateMap<TimeSlotDto, TimeSlotViewModel>();
-            CreateMap<AvailableTimesDto, AvailableTimeViewModel>();
+            CreateMap<AvailableTimeDto, AvailableTimeViewModel>();
         }
     }
 }

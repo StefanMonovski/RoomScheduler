@@ -2,7 +2,7 @@
 
 namespace RoomScheduler.Services.DataTransferObjects
 {
-    public class AvailableTimesDto
+    public class AvailableTimeDto
     {
         public TimeSpan From { get; set; }
 

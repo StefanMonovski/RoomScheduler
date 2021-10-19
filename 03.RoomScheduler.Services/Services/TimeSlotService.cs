@@ -121,7 +121,7 @@ namespace RoomScheduler.Services.Services
             return timeSlotDto;
         }
 
-        public List<AvailableTimesDto> GetAvailableTimeSlotsByRoom(DateTime date, TimeSpan duration, int roomId)
+        public List<AvailableTimeDto> GetAvailableTimeSlotsByRoom(DateTime date, TimeSpan duration, int roomId)
         {
             List<TimeSlotDto> reservedTimeSlots = context.TimeSlots
                 .Where(x => x.RoomId == roomId && x.From.Date == date)
@@ -138,7 +138,7 @@ namespace RoomScheduler.Services.Services
                 .Select(x => x.AvailableTo)
                 .FirstOrDefault();
 
-            List<AvailableTimesDto> roomTimesAvailable = new();
+            List<AvailableTimeDto> roomTimesAvailable = new();
 
             if (reservedTimeSlots.Count == 0)
             {
@@ -171,13 +171,13 @@ namespace RoomScheduler.Services.Services
             return roomTimesAvailable;
         }
 
-        private static List<AvailableTimesDto> GetAvailableTimeSlotsBetweenTimeSpans(TimeSpan start, TimeSpan end, TimeSpan duration)
+        private static List<AvailableTimeDto> GetAvailableTimeSlotsBetweenTimeSpans(TimeSpan start, TimeSpan end, TimeSpan duration)
         {
-            List<AvailableTimesDto> timeSlotsAvailable = new();
+            List<AvailableTimeDto> timeSlotsAvailable = new();
 
             for (TimeSpan i = start; i < end; i += TimeSpan.FromMinutes(15))
             {
-                var availableTime = new AvailableTimesDto()
+                var availableTime = new AvailableTimeDto()
                 {
                     From = i,
                     To = i + duration

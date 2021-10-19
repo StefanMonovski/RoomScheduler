@@ -34,18 +34,48 @@
     </div>
 
     <div class="wrapper">
+        @{ int index = 0; }
         @foreach (var time in Model.AvailableSchedule)
         {
-            <a name="container" href="" class="list-group-item-action">
+            <a name="container" class="list-group-item-action" onclick="loadReserveTimeSlotModal(this, @index)"
+               data-room="@Model.Name" data-date="@Model.Date.ToShortDateString()" 
+               data-from="@time.From.ToString(@"hh\:mm")" data-to="@time.To.ToString(@"hh\:mm")">
+
                 <div style="padding: 10px;">
                     From: @time.From.ToString(@"hh\:mm")
-
                     <br />
                     To: @time.To.ToString(@"hh\:mm")
                 </div>
+
             </a>
+
+            <form id="reserveTimeSlotForm[@index]" method="post" asp-controller="TimeSlot" asp-action="Reserve" style="display: none;">
+                <input type="hidden" name="date" value="@Model.Date" />
+                <input type="hidden" name="from" value="@time.From" />
+                <input type="hidden" name="to" value="@time.To" />
+                <input type="hidden" name="roomId" value="@Model.Id" />
+            </form>
+            index++;
         }
     </div>
+
+    <partial name="~/Views/TimeSlot/_ReserveTimeSlotModalPartial.cshtml" />
+
+    <script>
+        function loadReserveTimeSlotModal() {
+            let container = arguments[0];            
+            $('#room').text(container.getAttribute('data-room'));
+            $('#date').text(container.getAttribute('data-date'));
+            $('#from').text(container.getAttribute('data-from'));
+            $('#to').text(container.getAttribute('data-to'));
+
+            let formIndex = arguments[1];
+            let formId = `reserveTimeSlotForm[${formIndex}]`;
+            $('#reserveButton').attr("form", formId);
+
+            $('#currentAvailableTimeModal').modal('show');
+        }
+    </script>
 
 </body>
 </html>

@@ -78,6 +78,7 @@ namespace RoomScheduler.Web.Controllers
                 Guid = room.Guid,
                 Name = room.Name,
                 Capacity = room.Capacity,
+                Date = date,
                 AvailableSchedule = mapper.Map<List<AvailableTimeViewModel>>(availableTimes)
             };
 
