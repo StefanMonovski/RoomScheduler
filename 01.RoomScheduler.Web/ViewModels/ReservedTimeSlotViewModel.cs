@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace RoomScheduler.Services.DataTransferObjects
+namespace RoomScheduler.Web.ViewModels
 {
-    public class TimeSlotDto
+    public class ReservedTimeSlotViewModel
     {
         public int Id { get; set; }
 
@@ -14,12 +14,8 @@ namespace RoomScheduler.Services.DataTransferObjects
 
         public int RoomId { get; set; }
 
-        public string RoomGuid { get; set; }
-
         public string RoomName { get; set; }
 
         public string CreatorId { get; set; }
-
-        public ApplicationUserDto Creator { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace RoomScheduler.Services.Mapping
         {
             CreateMap<ApplicationUser, ApplicationUserDto>();
             CreateMap<Room, RoomDto>();
-            CreateMap<TimeSlot, TimeSlotDto>();
+            CreateMap<TimeSlot, TimeSlotDto>().ForMember(x => x.RoomName, x => x.MapFrom(x => x.Room.Name));
 
             CreateMap<RoomDto, JsonRoom>().ForMember(x => x.RoomName, x => x.MapFrom(x => x.Name));
             CreateMap<TimeSlotDto, JsonTimeSlot>();
