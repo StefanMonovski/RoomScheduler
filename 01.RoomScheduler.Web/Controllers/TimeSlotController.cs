@@ -25,5 +25,14 @@ namespace RoomScheduler.Web.Controllers
 
             return RedirectToAction("Reservations", "User");
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Delete(int timeSlotId)
+        {
+            await timeSlotService.DeleteTimeSlotAsync(timeSlotId);
+
+            return RedirectToAction("Reservations", "User");
+        }
     }
 }

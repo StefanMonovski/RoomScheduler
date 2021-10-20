@@ -23,14 +23,47 @@
 
     <div name="container" class="list-group-item" style="margin-bottom: 50px;">
         <div style="padding: 10px;">
-            <h3>Your reservations</h3>
+            <h3>Your upcoming reservations</h3>
         </div>
     </div>
 
     <div class="wrapper">
-        @foreach (var timeSlot in Model)
+        @{ int index = 0; }
+        @foreach (var timeSlot in Model.Where(x => x.From >= DateTime.Today).OrderByDescending(x => x.From))
         {
-            <a name="container" href="" class="list-group-item-action">
+            <a id="container[@index]" name="container" class="list-group-item-action grow" style="display: flex; justify-content: space-between;">
+                <div style="padding: 10px;">
+                    Room: @timeSlot.RoomName
+                    <br />
+                    Date: @timeSlot.From.Date.ToShortDateString()
+                    <br />
+                    From: @timeSlot.From.ToShortTimeString() To: @timeSlot.To.ToShortTimeString()
+                </div>
+
+                <img name="deleteButton" src="~/svg/x.svg" alt="Delete" style="padding-right: 10px; display: normal;" onclick="deleteReserveTimeSlotModal(this, @index)"
+                     data-room="@timeSlot.RoomName" data-date="@timeSlot.From.ToShortDateString()"
+                     data-from="@timeSlot.From.ToString(@"hh\:mm")" data-to="@timeSlot.To.ToString(@"hh\:mm")" />
+
+                <form id="deleteTimeSlotForm[@index]" method="post" asp-controller="TimeSlot" asp-action="Delete" style="display: none;">
+                    <input type="hidden" name="timeSlotId" value="@timeSlot.Id" />
+                </form>
+            </a>
+            index++;
+        }
+    </div>
+
+    <div id="pastReservationsContainer" data-for="pastReservations" name="container" class="list-group-item grow" style="margin-bottom: 10px; margin-top: 30px; display:flex; justify-content: space-between;" onclick="hideOrShowReservations(this)">
+        <div style="padding: 10px;">
+            <h5>Past week your reservations</h5>
+        </div>
+
+        <img name="arrow" src="~/svg/arrow-down.svg" alt="Show" />
+    </div>
+
+    <div id="pastReservations" class="wrapper" style="display: none;">
+        @foreach (var timeSlot in Model.Where(x => x.From < DateTime.Today && x.From > DateTime.Today.AddDays(-7)).OrderByDescending(x => x.From))
+        {
+            <a name="container" class="list-group-item-light">
                 <div style="padding: 10px;">
                     Room: @timeSlot.RoomName
                     <br />
@@ -41,6 +74,40 @@
             </a>
         }
     </div>
+
+    <partial name="~/Views/TimeSlot/_DeleteTimeSlotModalPartial.cshtml" />
+
+    <script>
+        function deleteReserveTimeSlotModal() {
+            let container = arguments[0];
+            $('#room').text(container.getAttribute('data-room'));
+            $('#date').text(container.getAttribute('data-date'));
+            $('#from').text(container.getAttribute('data-from'));
+            $('#to').text(container.getAttribute('data-to'));
+
+            let formIndex = arguments[1];
+            let formId = `deleteTimeSlotForm[${formIndex}]`;
+            $('#deleteButton').attr("form", formId);
+
+            $('#deleteTimeSlotModal').modal('show');
+        }
+    </script>
+
+    <script>
+        function hideOrShowReservations() {
+            let container = arguments[0];
+            let reservations = document.getElementById(container.getAttribute('data-for'));
+
+            if (reservations.style.display === 'none') {
+                reservations.style.display = 'grid';
+                $('#' + container.id).children('img[name="arrow"]').attr("src", "/svg/arrow-up.svg");
+            }
+            else {
+                reservations.style.display = 'none';
+                $('#' + container.id).children('img[name="arrow"]').attr("src", "/svg/arrow-down.svg");
+            }
+        }
+    </script>
 
 </body>
 </html>
