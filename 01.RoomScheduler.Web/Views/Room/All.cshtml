@@ -39,14 +39,14 @@
     {
         <div name="container" class="list-group-item" style="margin-bottom: 10px;">
             <div style="padding: 10px;">
-                <h5>All available rooms:</h5>
+                <h5>All available rooms</h5>
             </div>
         </div>
 
         <div class="wrapper">
             @foreach (var room in Model)
             {
-                <a name="container" href="@Url.Action("Current", "Room", new { roomGuid = room.Guid, optionalDuration = new TimeSpan(1, 0, 0) } )" class="list-group-item-action">
+                <a name="container" href="@Url.Action("Current", "Room", new { roomGuid = room.Guid, optionalDuration = new TimeSpan(1, 0, 0) } )" class="list-group-item-action grow">
                     <div style="padding: 10px;">
                         Name: @room.Name
                         <br />
