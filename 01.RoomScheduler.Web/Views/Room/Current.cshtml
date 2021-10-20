@@ -17,6 +17,14 @@
             border-color: grey;
             border-radius: 20px;
         }
+
+        [id="selectedHours[@Model.SelectedOptionalHours]"] {
+            background-color: lightgrey;
+        }
+
+            [id="selectedHours[@Model.SelectedOptionalHours]"]:hover {
+                background-color: lightgrey;
+            }
     </style>
 </head>
 <body>
@@ -29,6 +37,68 @@
 
     <div name="container" class="list-group-item" style="margin-bottom: 10px;">
         <div style="padding: 10px;">
+            <h5>Show optional time slots for today:</h5>
+
+            <ul class="list-group list-group-horizontal">
+                @for (int i = 1; i < 7; i++)
+                {
+                    <li id="selectedHours[@i]" class="list-group-item list-group-item-action" style="border-color: grey;"
+                        onclick="location.href = '@Url.Action("Current", "Room", new { roomGuid = Model.Guid, optionalDuration = new TimeSpan(i, 0, 0)})'">
+                        @if (i == 1)
+                        {
+                            <a onselectstart="return false" style="cursor: default;">
+                                @i hour
+                            </a>
+                        }
+                        else
+                        {
+                            <div onselectstart="return false" style="cursor: default">
+                                @i hours
+                            </div>
+                        }
+                    </li>
+                }
+            </ul>
+
+            @if (Model.AvailableOptionalSchedule.Count == 0)
+            {
+                <ul class="list-group">
+                    <li class="list-group-item" style="border-color: grey; margin-top: 10px;">
+                        <div>No optional time slots. Use the search for specific results.</div>
+                    </li>
+                </ul>
+
+            }
+        </div>
+    </div>
+
+    <div class="wrapper">
+        @{ int index = 0; }
+        @foreach (var time in Model.AvailableOptionalSchedule)
+        {
+            <a name="container" class="list-group-item-action" style="border-color: green;" onclick="loadReserveTimeSlotModal(this, @index)"
+               data-room="@Model.Name" data-date="@DateTime.Today.ToShortDateString()"
+               data-from="@time.From.ToString(@"hh\:mm")" data-to="@time.To.ToString(@"hh\:mm")">
+
+                <div style="padding: 10px;">
+                    From: @time.From.ToString(@"hh\:mm")
+                    <br />
+                    To: @time.To.ToString(@"hh\:mm")
+                </div>
+            </a>
+
+            <form id="reserveTimeSlotForm[@index]" method="post" asp-controller="TimeSlot" asp-action="Reserve" style="display: none;">
+                <input type="hidden" name="date" value="@DateTime.Today" />
+                <input type="hidden" name="from" value="@time.From" />
+                <input type="hidden" name="to" value="@time.To" />
+                <input type="hidden" name="roomId" value="@Model.Id" />
+            </form>
+            index++;
+        }
+    </div>
+
+    <div name="container" class="list-group-item" style="margin-bottom: 10px; margin-top: 50px;">
+        <div style="padding: 10px;">
             <h5>Reserved time slots:</h5>
         </div>
     </div>
@@ -36,7 +106,7 @@
     <div class="wrapper">
         @foreach (var timeSlot in Model.Schedule)
         {
-            <a name="container" href="" class="list-group-item-action">
+            <a name="container" class="list-group-item-action" style="border-color: red">
                 <div style="padding: 10px;">
                     Date: @timeSlot.From.Date.ToShortDateString()
 
@@ -46,6 +116,24 @@
             </a>
         }
     </div>
+
+    <partial name="~/Views/TimeSlot/_ReserveTimeSlotModalPartial.cshtml" />
+
+    <script>
+        function loadReserveTimeSlotModal() {
+            let container = arguments[0];
+            $('#room').text(container.getAttribute('data-room'));
+            $('#date').text(container.getAttribute('data-date'));
+            $('#from').text(container.getAttribute('data-from'));
+            $('#to').text(container.getAttribute('data-to'));
+
+            let formIndex = arguments[1];
+            let formId = `reserveTimeSlotForm[${formIndex}]`;
+            $('#reserveButton').attr("form", formId);
+
+            $('#currentAvailableTimeModal').modal('show');
+        }
+    </script>
 
 </body>
 </html>

@@ -195,5 +195,21 @@ namespace RoomScheduler.Services.Services
 
             return timeSlotsAvailable;
         }
+
+        public List<AvailableTimeDto> GetOptionalAvailableTimeSlotsByRoom(TimeSpan duration, int roomId)
+        {
+            List<AvailableTimeDto> optionalTimesAvailable = new();
+
+            List<AvailableTimeDto> allRoomTimesAvailable = GetAvailableTimeSlotsByRoom(DateTime.Today, duration, roomId);
+            foreach (var timeAvailable in allRoomTimesAvailable)
+            {
+                if (timeAvailable.From.Minutes == 0)
+                {
+                    optionalTimesAvailable.Add(timeAvailable);
+                }
+            }
+
+            return optionalTimesAvailable;
+        }
     }
 }

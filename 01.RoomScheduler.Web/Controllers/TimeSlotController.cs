@@ -23,7 +23,7 @@ namespace RoomScheduler.Web.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             await timeSlotService.AddTimeSlotAsync(date.Add(from), date.Add(to), roomId, userId);
 
-            return RedirectToAction("All", "Room");
+            return RedirectToAction("Reservations", "User");
         }
     }
 }

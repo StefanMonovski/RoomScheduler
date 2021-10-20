@@ -34,10 +34,14 @@ namespace RoomScheduler.Web.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult Current(string roomGuid)
+        public IActionResult Current(string roomGuid, TimeSpan optionalDuration)
         {
             var room = roomService.GetRoomByGuid(roomGuid);
             var viewModel = mapper.Map<RoomCurrentViewModel>(room);
+
+            var optionalTimeSlots = timeSlotService.GetOptionalAvailableTimeSlotsByRoom(optionalDuration, room.Id);
+            viewModel.AvailableOptionalSchedule = mapper.Map<List<AvailableTimeViewModel>>(optionalTimeSlots);
+            viewModel.SelectedOptionalHours = optionalDuration.Hours;
 
             return View(viewModel);
         }

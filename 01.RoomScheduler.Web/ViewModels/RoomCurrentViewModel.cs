@@ -13,5 +13,9 @@ namespace RoomScheduler.Web.ViewModels
         public int Capacity { get; set; }
 
         public List<TimeSlotViewModel> Schedule { get; set; }
+
+        public List<AvailableTimeViewModel> AvailableOptionalSchedule { get; set; }
+
+        public int SelectedOptionalHours { get; set; }
     }
 }

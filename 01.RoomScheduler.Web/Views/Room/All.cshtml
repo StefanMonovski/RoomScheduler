@@ -46,7 +46,7 @@
         <div class="wrapper">
             @foreach (var room in Model)
             {
-                <a name="container" href="@Url.Action("Current", "Room", new { roomGuid = room.Guid} )" class="list-group-item-action">
+                <a name="container" href="@Url.Action("Current", "Room", new { roomGuid = room.Guid, optionalDuration = new TimeSpan(1, 0, 0) } )" class="list-group-item-action">
                     <div style="padding: 10px;">
                         Name: @room.Name
                         <br />
