@@ -39,7 +39,7 @@ namespace RoomScheduler.Web.Controllers
             var room = roomService.GetRoomByGuid(roomGuid);
             var viewModel = mapper.Map<RoomCurrentViewModel>(room);
 
-            var optionalTimeSlots = timeSlotService.GetOptionalAvailableTimeSlotsByRoom(optionalDuration, room.Id);
+            var optionalTimeSlots = timeSlotService.GetOptionalAvailableTimeSlotsByRoom(DateTime.Today, optionalDuration, room.Id);
             viewModel.AvailableOptionalSchedule = mapper.Map<List<AvailableTimeViewModel>>(optionalTimeSlots);
             viewModel.SelectedOptionalHours = optionalDuration.Hours;
 
@@ -65,6 +65,12 @@ namespace RoomScheduler.Web.Controllers
                 Duration = duration,
                 Rooms = mapper.Map<List<RoomFilterViewModel>>(rooms)
             };
+
+            foreach (var filteredRoom in viewModel.Rooms)
+            {
+                var availiableTimeSlots = timeSlotService.GetOptionalAvailableTimeSlotsByRoom(inputModel.Date, duration, filteredRoom.Id);
+                filteredRoom.AvailableSchedule = mapper.Map<List<AvailableTimeViewModel>>(availiableTimeSlots);
+            }
 
              return View(viewModel);
         }
