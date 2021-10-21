@@ -118,7 +118,16 @@
     </div>
 
     <div id="upcomingReservations" class="wrapper" style="display: none;">
-        @foreach (var timeSlot in Model.Schedule.Where(x => x.From >= DateTime.Today).OrderByDescending(x => x.From))
+        @if (Model.Schedule.Where(x => x.From >= DateTime.Today).Count() == 0)
+        {
+            <ul class="list-group">
+                <li class="list-group-item" style="border-color: grey; margin-top: 10px;">
+                    <div>No upcoming reservations. Use the search to make one.</div>
+                </li>
+            </ul>
+        }
+
+        @foreach (var timeSlot in Model.Schedule.Where(x => x.From >= DateTime.Today).OrderByDescending(x => x.From.Date).ThenBy(x => x.From.TimeOfDay))
         {
             <a name="container" class="list-group-item-light" style="border-color: red">
                 <div style="padding: 10px;">
@@ -140,7 +149,16 @@
     </div>
 
     <div id="pastReservations" class="wrapper" style="display: none;">
-        @foreach (var timeSlot in Model.Schedule.Where(x => x.From < DateTime.Today && x.From > DateTime.Today.AddDays(-7)).OrderByDescending(x => x.From))
+        @if (Model.Schedule.Where(x => x.From < DateTime.Today && x.From > DateTime.Today.AddDays(-7)).Count() == 0)
+        {
+            <ul class="list-group">
+                <li class="list-group-item" style="border-color: grey; margin-top: 10px;">
+                    <div>No past reservations. Use the search to make one.</div>
+                </li>
+            </ul>
+        }
+
+        @foreach (var timeSlot in Model.Schedule.Where(x => x.From < DateTime.Today && x.From > DateTime.Today.AddDays(-7)).OrderByDescending(x => x.From.Date).ThenBy(x => x.From.TimeOfDay))
         {
             <a name="container" class="list-group-item-light" style="border-color: red">
                 <div style="padding: 10px;">

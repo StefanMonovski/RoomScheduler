@@ -29,7 +29,7 @@
 
     <div name="container" class="list-group-item" style="margin-bottom: 10px;">
         <div style="padding: 10px;">
-            <h5>Available time slots:</h5>
+            <h5>Available time slots</h5>
         </div>
     </div>
 
@@ -37,7 +37,7 @@
         @{ int index = 0; }
         @foreach (var time in Model.AvailableSchedule)
         {
-            <a name="container" class="list-group-item-action" onclick="loadReserveTimeSlotModal(this, @index)"
+            <a name="container" class="list-group-item-action grow" onclick="loadReserveTimeSlotModal(this, @index)"
                data-room="@Model.Name" data-date="@Model.Date.ToShortDateString()" 
                data-from="@time.From.ToString(@"hh\:mm")" data-to="@time.To.ToString(@"hh\:mm")">
 

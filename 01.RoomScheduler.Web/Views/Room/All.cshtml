@@ -17,45 +17,59 @@
             border-color: grey;
             border-radius: 20px;
         }
+
+        .form-group {
+            padding: 6px;
+        }
+
+        input, select {
+            width: 150px;
+            padding: 0;
+            margin: 0;
+        }
+
+        @@media only screen and (max-width: 500px) {
+            .timeSelect {
+                width: 50px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div name="container" style="padding-bottom: 75px; margin-bottom: 50px;">
+    <div name="container" style="padding-bottom: 20px; margin-bottom: 50px;">
         <h3 style="vertical-align: top; padding: 20px; text-align: center;">Find the best room for your meeting!</h3>
 
         <partial name="_FormFilterPartial.cshtml" model="new RoomScheduler.Web.InputModels.FormFilterInputModel()" />
     </div>
 
-    @if (Model.Count == 0)
-    {
-        <div name="container" class="list-group-item" style="margin-bottom: 10px;">
-            <div style="padding: 10px;">
-                <h5>No available rooms!</h5>
-            </div>
-        </div>
-    }
-    else
-    {
-        <div name="container" class="list-group-item" style="margin-bottom: 10px;">
-            <div style="padding: 10px;">
-                <h5>All available rooms</h5>
-            </div>
+    <div name="container" class="list-group-item" style="margin-bottom: 10px;">
+        <div style="padding: 10px;">
+            <h5>All available rooms</h5>
         </div>
 
-        <div class="wrapper">
-            @foreach (var room in Model)
-            {
-                <a name="container" href="@Url.Action("Current", "Room", new { roomGuid = room.Guid, optionalDuration = new TimeSpan(1, 0, 0) } )" class="list-group-item-action grow">
-                    <div style="padding: 10px;">
-                        Name: @room.Name
-                        <br />
-                        Capacity: @room.Capacity
-                    </div>
-                </a>
-            }
-        </div>
-    }
+        @if (Model.Count == 0)
+        {
+            <ul class="list-group">
+                <li class="list-group-item" style="border-color: grey; margin-top: 10px;">
+                    <div>No available rooms!</div>
+                </li>
+            </ul>
+        }
+    </div>
+
+    <div class="wrapper">
+        @foreach (var room in Model)
+        {
+            <a name="container" href="@Url.Action("Current", "Room", new { roomGuid = room.Guid, optionalDuration = new TimeSpan(1, 0, 0) } )" class="list-group-item-action grow" style="border-color: green;">
+                <div style="padding: 10px;">
+                    Name: @room.Name
+                    <br />
+                    Capacity: @room.Capacity
+                </div>
+            </a>
+        }
+    </div>
 
     @section Scripts{
         <partial name="_ValidationScriptsPartial.cshtml" />
