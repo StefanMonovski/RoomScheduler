@@ -77,7 +77,7 @@ namespace RoomScheduler.Web.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult Available(string roomGuid, TimeSpan duration, DateTime date)
+        public IActionResult Available(string roomGuid, TimeSpan duration, DateTime date, int participants)
         {
             var room = roomService.GetRoomByGuid(roomGuid);
             var availableTimes = timeSlotService.GetAvailableTimeSlotsByRoom(date, duration, room.Id);
@@ -89,6 +89,8 @@ namespace RoomScheduler.Web.Controllers
                 Name = room.Name,
                 Capacity = room.Capacity,
                 Date = date,
+                Duration = duration,
+                Participants = participants,
                 AvailableSchedule = mapper.Map<List<AvailableTimeViewModel>>(availableTimes)
             };
 

@@ -1,0 +1,16 @@
+﻿.flexContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+[name="deleteImage"] {
+    margin-left: 50px;
+    display: none;
+    cursor: pointer;
+}
+
+#pastReservationsContainer {
+    margin-bottom: 10px;
+    margin-top: 50px;
+    cursor: pointer;
+}

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RoomScheduler.Web.ViewModels
 {
@@ -11,6 +12,10 @@ namespace RoomScheduler.Web.ViewModels
         public string Name { get; set; }
 
         public int Capacity { get; set; }
+
+        public TimeSpan AvailableFrom { get; set; }
+
+        public TimeSpan AvailableTo { get; set; }
 
         public List<TimeSlotViewModel> Schedule { get; set; }
 

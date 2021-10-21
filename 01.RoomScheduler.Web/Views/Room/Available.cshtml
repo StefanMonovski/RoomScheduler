@@ -5,31 +5,18 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        .wrapper {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        [name="container"] {
-            border: 2px solid;
-            border-color: grey;
-            border-radius: 20px;
-        }
-    </style>
+    <link href="~/css/grid.css" rel="stylesheet" />
 </head>
 <body>
 
-    <div name="container" class="list-group-item" style="margin-bottom: 50px;">
-        <div style="padding: 10px;">
-            <h3>@Model.Name</h3>
-        </div>
-    </div>
-
     <div name="container" class="list-group-item" style="margin-bottom: 10px;">
         <div style="padding: 10px;">
-            <h5>Available time slots</h5>
+            <h3>All available time slots</h3>
+            <div>
+                Room: @Model.Name &ensp; Date: @Model.Date.ToShortDateString() &ensp;
+                Duration: @Model.Duration.ToString(@"hh\:mm") &ensp;
+                Participants: @Model.Participants
+            </div>
         </div>
     </div>
 
@@ -37,8 +24,9 @@
         @{ int index = 0; }
         @foreach (var time in Model.AvailableSchedule)
         {
-            <a name="container" class="list-group-item-action grow" onclick="loadReserveTimeSlotModal(this, @index)"
-               data-room="@Model.Name" data-date="@Model.Date.ToShortDateString()" 
+            <a name="container" class="list-group-item-action grow" style="border-color: green; cursor: pointer;"
+               onclick="loadReserveTimeSlotModal(this, @index)"
+               data-room="@Model.Name" data-date="@Model.Date.ToShortDateString()"
                data-from="@time.From.ToString(@"hh\:mm")" data-to="@time.To.ToString(@"hh\:mm")">
 
                 <div style="padding: 10px;">
@@ -60,21 +48,7 @@
 
     <partial name="~/Views/TimeSlot/_ReserveTimeSlotModalPartial.cshtml" />
 
-    <script>
-        function loadReserveTimeSlotModal() {
-            let container = arguments[0];            
-            $('#room').text(container.getAttribute('data-room'));
-            $('#date').text(container.getAttribute('data-date'));
-            $('#from').text(container.getAttribute('data-from'));
-            $('#to').text(container.getAttribute('data-to'));
-
-            let formIndex = arguments[1];
-            let formId = `reserveTimeSlotForm[${formIndex}]`;
-            $('#reserveButton').attr("form", formId);
-
-            $('#currentAvailableTimeModal').modal('show');
-        }
-    </script>
+    <script src="~/js/loadreservationmodal.js"></script>
 
 </body>
 </html>

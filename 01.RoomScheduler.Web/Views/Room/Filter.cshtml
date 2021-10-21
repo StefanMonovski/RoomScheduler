@@ -5,17 +5,11 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link href="~/css/grid.css" rel="stylesheet" />
+
     <style>
         .wrapper {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-        }
-
-        [name="container"] {
-            border: 2px solid;
-            border-color: grey;
-            border-radius: 20px;
+            grid-template-columns: repeat(6, 1fr) !important;
         }
     </style>
 </head>
@@ -33,23 +27,31 @@
     {
         <div name="container" class="list-group-item" style="margin-bottom: 50px;">
             <div style="padding: 10px;">
-                <h5>All available rooms on @Model.Date.ToShortDateString() for @Model.Duration.ToString(@"hh\:mm") hours and @Model.Participants participants</h5>
+                <h3>All available rooms</h3>
+                <div>
+                    Date: @Model.Date.ToShortDateString() &ensp;
+                    Duration: @Model.Duration.ToString(@"hh\:mm") &ensp;
+                    Participants: @Model.Participants
+                </div>
             </div>
 
             <ul class="list-group">
-                <li class="list-group-item" style="border-color: grey; margin-top: 10px;">
-                    <div>Displaying optional time slots. Click room for more specific results.</div>
+                <li class="list-group-item" style="border-color: darkgray;">
+                    <strong>Displayed time slots are optional. Click room for more specific results.</strong>
                 </li>
             </ul>
         </div>
 
         @foreach (var room in Model.Rooms.OrderBy(x => x.Capacity))
         {
-            <div name="container" onclick="location.href='@Url.Action("Available", "Room", new { roomGuid = room.Guid, duration = Model.Duration, date = Model.Date } )'" class="list-group-item grow" style="margin-bottom: 20px; margin-top: 50px;">
+            <div name="container" onclick="location.href='@Url.Action("Available", "Room", new { roomGuid = room.Guid, duration = Model.Duration, date = Model.Date, participants = Model.Participants } )'"
+                 class="list-group-item grow" style="margin-bottom: 20px; margin-top: 50px; cursor: pointer;">
                 <div>
                     Name: @room.Name
                     <br />
                     Capacity: @room.Capacity
+                    <br />
+                    Availability: @room.AvailableFrom.ToString(@"hh\:mm") - @room.AvailableTo.ToString(@"hh\:mm")
                 </div>
             </div>
 
@@ -57,7 +59,8 @@
                 @{ int index = 0; }
                 @foreach (var time in room.AvailableSchedule)
                 {
-                    <a name="container" class="list-group-item-action grow" onclick="loadReserveTimeSlotModal(this, @index)"
+                    <a name="container" style="border-color: green; cursor: pointer;" class="list-group-item-action grow"
+                       onclick="loadReserveTimeSlotModal(this, @index)"
                        data-room="@room.Name" data-date="@Model.Date.ToShortDateString()"
                        data-from="@time.From.ToString(@"hh\:mm")" data-to="@time.To.ToString(@"hh\:mm")">
 
@@ -82,21 +85,7 @@
 
     <partial name="~/Views/TimeSlot/_ReserveTimeSlotModalPartial.cshtml" />
 
-    <script>
-        function loadReserveTimeSlotModal() {
-            let container = arguments[0];
-            $('#room').text(container.getAttribute('data-room'));
-            $('#date').text(container.getAttribute('data-date'));
-            $('#from').text(container.getAttribute('data-from'));
-            $('#to').text(container.getAttribute('data-to'));
-
-            let formIndex = arguments[1];
-            let formId = `reserveTimeSlotForm[${formIndex}]`;
-            $('#reserveButton').attr("form", formId);
-
-            $('#currentAvailableTimeModal').modal('show');
-        }
-    </script>
+    <script src="~/js/loadreservationmodal.js"></script>
 
 </body>
 </html>

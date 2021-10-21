@@ -15,6 +15,10 @@ namespace RoomScheduler.Web.ViewModels
 
         public DateTime Date { get; set; }
 
+        public TimeSpan Duration { get; set; }
+
+        public int Participants { get; set; }
+
         public List<AvailableTimeViewModel> AvailableSchedule { get; set; }
     }
 }

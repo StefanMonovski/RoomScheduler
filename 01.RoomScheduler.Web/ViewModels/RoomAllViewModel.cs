@@ -1,4 +1,6 @@
-﻿namespace RoomScheduler.Web.ViewModels
+﻿using System;
+
+namespace RoomScheduler.Web.ViewModels
 {
     public class RoomAllViewModel
     {
@@ -9,5 +11,9 @@
         public string Name { get; set; }
 
         public int Capacity { get; set; }
+
+        public TimeSpan AvailableFrom { get; set; }
+
+        public TimeSpan AvailableTo { get; set; }
     }
 }

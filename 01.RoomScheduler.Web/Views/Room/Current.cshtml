@@ -5,38 +5,17 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link href="~/css/grid.css" rel="stylesheet" />
+    <link href="~/css/current.css" rel="stylesheet" />
+
     <style>
-        .wrapper {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        [name="container"] {
-            border: 2px solid;
-            border-color: grey;
-            border-radius: 20px;
-        }
-
         [id="selectedHours[@Model.SelectedOptionalHours]"] {
             background-color: lightgrey;
         }
 
-            [id="selectedHours[@Model.SelectedOptionalHours]"]:hover {
-                background-color: lightgrey;
-            }
-
-            @@media (max-width: 580px){
-                #hourOptions{
-                    display: flex;
-                    flex-wrap: wrap;
-                }
-
-                #hourOptions li {
-                    margin: 1px;
-                    display: inline-block;
-                }
-            }
+        [id="selectedHours[@Model.SelectedOptionalHours]"]:hover {
+            background-color: lightgrey;
+        }
     </style>
 </head>
 <body>
@@ -44,6 +23,10 @@
     <div name="container" class="list-group-item" style="margin-bottom: 50px;">
         <div style="padding: 10px;">
             <h3>@Model.Name</h3>
+            <div>
+                Capacity: @Model.Capacity &ensp;
+                Availability: @Model.AvailableFrom.ToString(@"hh\:mm") - @Model.AvailableTo.ToString(@"hh\:mm")
+            </div>
         </div>
     </div>
 
@@ -55,7 +38,7 @@
                 @for (int i = 1; i < 7; i++)
                 {
                     <li id="selectedHours[@i]" class="list-group-item list-group-item-action" style="border-color: grey; cursor: pointer;"
-                        onclick="location.href = '@Url.Action("Current", "Room", new { roomGuid = Model.Guid, optionalDuration = new TimeSpan(i, 0, 0)})'">
+                        onclick="location.href='@Url.Action("Current", "Room", new { roomGuid = Model.Guid, optionalDuration = new TimeSpan(i, 0, 0)})'">
                         @if (i == 1)
                         {
                             <a onselectstart="return false" style="cursor: pointer;">
@@ -88,7 +71,8 @@
         @{ int index = 0; }
         @foreach (var time in Model.AvailableOptionalSchedule)
         {
-            <a name="container" class="list-group-item-action grow" style="border-color: green; cursor: pointer;" onclick="loadReserveTimeSlotModal(this, @index)"
+            <a name="container" class="list-group-item-action grow" style="border-color: green; cursor: pointer;"
+               onclick="loadReserveTimeSlotModal(this, @index)"
                data-room="@Model.Name" data-date="@DateTime.Today.ToShortDateString()"
                data-from="@time.From.ToString(@"hh\:mm")" data-to="@time.To.ToString(@"hh\:mm")">
 
@@ -109,16 +93,24 @@
         }
     </div>
 
-    <div id="upcomingReservationsContainer" data-for="upcomingReservations" name="container" class="list-group-item grow" style="margin-bottom: 10px; margin-top: 50px; display: flex; justify-content: space-between;" onclick="hideOrShowReservations(this)">
+    <div id="upcomingReservationsContainer" data-for="upcomingReservations" name="container" class="list-group-item grow" style="cursor: pointer;"
+         onclick="hideOrShowReservations(this)">
+
         <div style="padding: 10px;">
             <h5>Upcoming reservations</h5>
         </div>
 
         <img name="arrow" src="~/svg/arrow-down.svg" alt="Show" />
+
     </div>
 
+    @{
+        var upcomingReservations = Model.Schedule.Where(x => x.From >= DateTime.Today).ToList();
+    }
+
     <div id="upcomingReservations" class="wrapper" style="display: none;">
-        @if (Model.Schedule.Where(x => x.From >= DateTime.Today).Count() == 0)
+
+        @if (upcomingReservations.Count() == 0)
         {
             <ul class="list-group">
                 <li class="list-group-item" style="border-color: grey; margin-top: 10px;">
@@ -127,7 +119,7 @@
             </ul>
         }
 
-        @foreach (var timeSlot in Model.Schedule.Where(x => x.From >= DateTime.Today).OrderByDescending(x => x.From.Date).ThenBy(x => x.From.TimeOfDay))
+        @foreach (var timeSlot in upcomingReservations.OrderByDescending(x => x.From.Date).ThenBy(x => x.From.TimeOfDay))
         {
             <a name="container" class="list-group-item-light" style="border-color: red">
                 <div style="padding: 10px;">
@@ -138,72 +130,52 @@
                 </div>
             </a>
         }
+
     </div>
 
-    <div id="pastReservationsContainer" data-for="pastReservations" name="container" class="list-group-item grow" style="margin-bottom: 10px; margin-top: 30px; display:flex; justify-content: space-between;" onclick="hideOrShowReservations(this)">
+    <div id="pastReservationsContainer" data-for="pastReservations" name="container" class="list-group-item grow" style="cursor: pointer;"
+         onclick="hideOrShowReservations(this)">
+
         <div style="padding: 10px;">
             <h5>Past week reservations</h5>
         </div>
 
         <img name="arrow" src="~/svg/arrow-down.svg" alt="Show" />
+
     </div>
 
+    @{
+        var pastReservations = Model.Schedule.Where(x => x.From < DateTime.Today && x.From > DateTime.Today.AddDays(-7)).ToList();
+    }
+
     <div id="pastReservations" class="wrapper" style="display: none;">
-        @if (Model.Schedule.Where(x => x.From < DateTime.Today && x.From > DateTime.Today.AddDays(-7)).Count() == 0)
+
+        @if (pastReservations.Count() == 0)
         {
             <ul class="list-group">
                 <li class="list-group-item" style="border-color: grey; margin-top: 10px;">
-                    <div>No past reservations. Use the search to make one.</div>
+                    <div>No reservations made during the past week. Use the search to make one.</div>
                 </li>
             </ul>
         }
 
-        @foreach (var timeSlot in Model.Schedule.Where(x => x.From < DateTime.Today && x.From > DateTime.Today.AddDays(-7)).OrderByDescending(x => x.From.Date).ThenBy(x => x.From.TimeOfDay))
+        @foreach (var timeSlot in pastReservations.OrderByDescending(x => x.From.Date).ThenBy(x => x.From.TimeOfDay))
         {
             <a name="container" class="list-group-item-light" style="border-color: red">
                 <div style="padding: 10px;">
                     Date: @timeSlot.From.Date.ToShortDateString()
-
                     <br />
                     From: @timeSlot.From.ToShortTimeString() To: @timeSlot.To.ToShortTimeString()
                 </div>
             </a>
         }
+
     </div>
 
     <partial name="~/Views/TimeSlot/_ReserveTimeSlotModalPartial.cshtml" />
 
-    <script>
-        function loadReserveTimeSlotModal() {
-            let container = arguments[0];
-            $('#room').text(container.getAttribute('data-room'));
-            $('#date').text(container.getAttribute('data-date'));
-            $('#from').text(container.getAttribute('data-from'));
-            $('#to').text(container.getAttribute('data-to'));
-
-            let formIndex = arguments[1];
-            let formId = `reserveTimeSlotForm[${formIndex}]`;
-            $('#reserveButton').attr("form", formId);
-
-            $('#currentAvailableTimeModal').modal('show');
-        }
-    </script>
-
-    <script>
-        function hideOrShowReservations() {
-            let container = arguments[0];            
-            let reservations = document.getElementById(container.getAttribute('data-for'));
-
-            if (reservations.style.display === 'none') {
-                reservations.style.display = 'grid';
-                $('#' + container.id).children('img[name="arrow"]').attr("src", "/svg/arrow-up.svg");
-            }
-            else {
-                reservations.style.display = 'none';
-                $('#' + container.id).children('img[name="arrow"]').attr("src", "/svg/arrow-down.svg");
-            }
-        }
-    </script>
+    <script src="~/js/loadreservationmodal.js"></script>
+    <script src="~/js/hideshowreservations.js"></script>
 
 </body>
 </html>

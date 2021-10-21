@@ -5,45 +5,18 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        .wrapper {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        [name="container"] {
-            border: 2px solid;
-            border-color: grey;
-            border-radius: 20px;
-        }
-
-        .form-group {
-            padding: 6px;
-        }
-
-        input, select {
-            width: 150px;
-            padding: 0;
-            margin: 0;
-        }
-
-        @@media only screen and (max-width: 500px) {
-            .timeSelect {
-                width: 50px;
-            }
-        }
-    </style>
+    <link href="~/css/grid.css" rel="stylesheet" />
+    <link href="~/css/all.css" rel="stylesheet" />
 </head>
 <body>
 
-    <div name="container" style="padding-bottom: 20px; margin-bottom: 50px;">
-        <h3 style="vertical-align: top; padding: 20px; text-align: center;">Find the best room for your meeting!</h3>
+    <div id="searchContainer" name="container" style="margin-bottom: 10px;">
+        <h3 id="banner">Find the best room for your meeting!</h3>
 
         <partial name="_FormFilterPartial.cshtml" model="new RoomScheduler.Web.InputModels.FormFilterInputModel()" />
     </div>
 
-    <div name="container" class="list-group-item" style="margin-bottom: 10px;">
+    <div name="container" class="list-group-item" style="margin-top: 50px; margin-bottom: 10px;">
         <div style="padding: 10px;">
             <h5>All available rooms</h5>
         </div>
@@ -51,7 +24,7 @@
         @if (Model.Count == 0)
         {
             <ul class="list-group">
-                <li class="list-group-item" style="border-color: grey; margin-top: 10px;">
+                <li class="list-group-item" style="border-color: darkgray;">
                     <div>No available rooms!</div>
                 </li>
             </ul>
@@ -61,12 +34,17 @@
     <div class="wrapper">
         @foreach (var room in Model)
         {
-            <a name="container" href="@Url.Action("Current", "Room", new { roomGuid = room.Guid, optionalDuration = new TimeSpan(1, 0, 0) } )" class="list-group-item-action grow" style="border-color: green;">
+            <a name="container" href="@Url.Action("Current", "Room", new { roomGuid = room.Guid, optionalDuration = new TimeSpan(1, 0, 0) } )"
+               class="list-group-item-action grow" style="border-color: green;">
+
                 <div style="padding: 10px;">
                     Name: @room.Name
                     <br />
                     Capacity: @room.Capacity
+                    <br />
+                    Availability: @room.AvailableFrom.ToString(@"hh\:mm") - @room.AvailableTo.ToString(@"hh\:mm")
                 </div>
+
             </a>
         }
     </div>
