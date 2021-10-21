@@ -126,6 +126,7 @@ namespace RoomScheduler.Services.Services
             List<TimeSlotDto> reservedTimeSlots = context.TimeSlots
                 .Where(x => x.RoomId == roomId && x.From.Date == date)
                 .ProjectTo<TimeSlotDto>(mapper.ConfigurationProvider)
+                .OrderBy(x => x.From)
                 .ToList();
 
             TimeSpan roomAvailableFrom = context.Rooms
@@ -196,11 +197,11 @@ namespace RoomScheduler.Services.Services
             return timeSlotsAvailable;
         }
 
-        public List<AvailableTimeDto> GetOptionalAvailableTimeSlotsByRoom(TimeSpan duration, int roomId)
+        public List<AvailableTimeDto> GetOptionalAvailableTimeSlotsByRoom(DateTime date, TimeSpan duration, int roomId)
         {
             List<AvailableTimeDto> optionalTimesAvailable = new();
 
-            List<AvailableTimeDto> allRoomTimesAvailable = GetAvailableTimeSlotsByRoom(DateTime.Today, duration, roomId);
+            List<AvailableTimeDto> allRoomTimesAvailable = GetAvailableTimeSlotsByRoom(date, duration, roomId);
             foreach (var timeAvailable in allRoomTimesAvailable)
             {
                 if (timeAvailable.From.Minutes == 0)

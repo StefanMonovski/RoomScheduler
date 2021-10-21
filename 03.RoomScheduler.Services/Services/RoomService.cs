@@ -159,6 +159,7 @@ namespace RoomScheduler.Services.Services
             List<TimeSlotDto> roomTimeSlotsOnDate = context.TimeSlots
                 .Where(x => x.RoomId == roomId && x.From.Date == date)
                 .ProjectTo<TimeSlotDto>(mapper.ConfigurationProvider)
+                .OrderBy(x => x.From)
                 .ToList();
 
             if (roomTimeSlotsOnDate.Count == 0)
